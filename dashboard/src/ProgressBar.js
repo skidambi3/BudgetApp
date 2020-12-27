@@ -5,7 +5,7 @@ class ProgressBarExample extends React.Component {
         super(props)
 
         this.state = {
-            percentage: 50
+            percentage: props.percentage
         }
     }
 

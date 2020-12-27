@@ -1,45 +1,15 @@
 import React, {Component} from 'react';
-import {DayPilot, DayPilotCalendar} from "daypilot-pro-react";
-
-class Week {
-  constructor(dates) {
-    this.dates = dates;
-  }
-
-}
-class Date {
-  constructor(day, purchases) {
-    this.day = day;
-    this.purchases = purchases;
-  }
-}
-class Purchase {
-  constructor(name,price,category,day,repetition) {
-    this.name = name;
-    this.price = price;
-    this.category = category;
-    this.day = day;
-    this.repetition = repetition;
-  }
-}
-
-let wed1 = new Purchase("Grapes",3,"Food","W","No");
-let fri1 =  new Purchase("Pizza",7.5,"Food","F","M/W/F");
-let wed2 =  new Purchase("Calculator",20,"School","W","M/W");
-
-let wed = new Date("W",[wed1,wed2]);
-let fri = new Date("F",[fri1]);
+import './Calendar.css';
+import {thisWeek} from './store.js';
 
 
-let thisWeek = new Week([wed,fri]);
 
-
-const returnPurchaseName = (day,week) => {
+const returnPurchaseInfo = (day,week) => {
   let purchases = [];
   for (const date of week.dates) {
     if (date.day === day) {
       for (const purchase of date.purchases) {
-        purchases.push(<li>{purchase.name}</li>)
+        purchases.push(<li class = "purchase-item">{purchase.name} : ${purchase.price}</li>)
         parseRepetitions(purchase.repetition,purchase);
       }
     }
@@ -77,14 +47,14 @@ class Calendar extends Component {
         </div>
         <div class = "date">
           Wednesday
-          {returnPurchaseName("W",thisWeek)}
+          {returnPurchaseInfo("W",thisWeek)}
         </div>
         <div class = "date">
           Thursday
         </div>
         <div class = "date">
           Friday
-          {returnPurchaseName("F",thisWeek)}
+          {returnPurchaseInfo("F",thisWeek)}
 
         </div>
         <div class = "date">
