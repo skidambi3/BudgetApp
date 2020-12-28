@@ -5,7 +5,7 @@ import { DayPilot, DayPilotCalendar } from "daypilot-pro-react";
 import ProgressBar from './ProgressBar.js';
 import Calendar from './Calendar.js';
 import LineChart from './Chart.js';
-import { user1, thisWeek } from './store.js';
+import { user1 } from './store.js';
 import { startOfWeek, format, addDays, getTime } from 'date-fns'
 
 
@@ -33,12 +33,11 @@ const findPurchaseTotal = (account, startOfWeek) => {
   return sum;
 }
 
-const findPriceDistribution = (week) => {
+const findPriceDistribution = (account,startOfWeek) => {
   let prices = {}
 
-  for (const date of week.dates) {
-    for (const purchase of date.purchases) {
-      if (purchase.category in prices) {
+    for (const purchase of account.purchases) {
+      if (purchase.category in prices && (getTime(purchase.day) >= getTime(startOfWeek) && getTime(purchase.day) < getTime(addDays(startOfWeek, 7)))) {
         prices[purchase.category] += purchase.price;
       }
       else {
@@ -46,7 +45,7 @@ const findPriceDistribution = (week) => {
       }
 
     }
-  }
+
   return prices;
 }
 
@@ -117,13 +116,14 @@ const processRepetitions = (account) => {
 }
 
 function App() {
-  const vals = findPriceDistribution(thisWeek);
-  let convertedWeek = processRepetitions(thisWeek);
+  // let convertedWeek = processRepetitions(thisWeek);
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
   const alterDate = (count) => {
     setDate(addDays(firstDay, count));
     console.log(addDays(firstDay, count))
   }
+  const vals =  findPriceDistribution(user1,firstDay);
+
   return (
 
     <div className="App">
@@ -148,7 +148,7 @@ function App() {
 
           <ProgressBar percentage={findPurchaseTotal(user1,firstDay) / user1.weeklyBudget * 100} />
           <h4>You're projected to spend {findPurchaseTotal(user1,firstDay) / user1.weeklyBudget * 100}% of your weekly budget</h4>
-          <h5>Status: {statusMessage(user1, user1.weeklyBudget, vals,firstDay)}</h5>
+          <h5>Status: {statusMessage(user1, user1.weeklyBudget,vals,firstDay)}</h5>
           <div>
             {
               Object.keys(vals).map((key, index) => (
