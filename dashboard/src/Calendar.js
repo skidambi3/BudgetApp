@@ -1,68 +1,76 @@
 import React, {Component} from 'react';
 import './Calendar.css';
-import {thisWeek} from './store.js';
+import {user1} from './store.js';
+import { startOfWeek,format,addDays,isEqual } from 'date-fns'
 
 
 
-const returnPurchaseInfo = (day,week) => {
+const returnPurchaseInfo = (day,account) => {
   let purchases = [];
-  for (const date of week.dates) {
-    if (date.day === day) {
-      for (const purchase of date.purchases) {
-        purchases.push(<li class = "purchase-item">{purchase.name} : ${purchase.price}</li>)
-        parseRepetitions(purchase.repetition,purchase);
-      }
+  console.log(day);
+  for (const purchase of account.purchases) {
+
+    if (purchase.repetition.includes(format(day,'EEEEEE')) ){
+      purchases.push(<div><li class = "purchase-item">{purchase.name} : ${purchase.price}</li> <button>Remove Above</button></div>)
+
+    }
+    else if (isEqual(purchase.day,day)) {
+        purchases.push(<div><li class = "purchase-item">{purchase.name} : ${purchase.price}</li> <button>Remove Above</button></div>)
+
     }
   }
   return purchases
 }
 
-const parseRepetitions = (repetition,purchase) => {
-  let dates = [];
-  if (repetition === "no") {
-    return repetition;
-  }
-  let startIndex = 0;
-  for (let i = 0; i < repetition.length; i++) {
-    if (repetition.substring(i,i+1) === "/") {
-      dates.push(repetition.substring(startIndex,i));
-      startIndex = i+1;
-    }
-  }
-  dates.push(repetition.substring(repetition.length-1,repetition.length));
-  console.log(dates);
-}
+
 
 class Calendar extends Component {
+  constructor(props) {
+    super(props)
 
+    this.state = {
+        startDate: props.startDate
+    }
+  }
   render() {
 
     return (
       <div class = "weekly-calendar">
         <div class = "date">
-          Monday
-        </div>
-        <div class = "date">
-          Tuesday
-        </div>
-        <div class = "date">
-          Wednesday
-          {returnPurchaseInfo("W",thisWeek)}
-        </div>
-        <div class = "date">
-          Thursday
-        </div>
-        <div class = "date">
-          Friday
-          {returnPurchaseInfo("F",thisWeek)}
+          Sunday {format(this.props.startDate,' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,0),user1)}
 
         </div>
         <div class = "date">
-          Saturday
+          Monday {format(addDays(this.props.startDate,1),' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,1),user1)}
+
         </div>
         <div class = "date">
-          Sunday
+          Tuesday {format(addDays(this.props.startDate,2),' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,2),user1)}
+
         </div>
+        <div class = "date">
+          Wednesday {format(addDays(this.props.startDate,3),' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,3),user1)}
+        </div>
+        <div class = "date">
+          Thursday {format(addDays(this.props.startDate,4),' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,4),user1)}
+
+        </div>
+        <div class = "date">
+          Friday {format(addDays(this.props.startDate,5),' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,5),user1)}
+
+        </div>
+        <div class = "date">
+          Saturday {format(addDays(this.props.startDate,6),' M/d')}
+          {returnPurchaseInfo(addDays(this.props.startDate,6),user1)}
+
+        </div>
+
       </div>
     );
   }

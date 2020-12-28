@@ -53,9 +53,10 @@
 .weekly-calendar{
   display: grid;
   grid-template-columns: 14% 14% 14% 14% 14% 14% 14% ;
+
 }
 
 .date{
   border:1px solid;
-  height: 100px;
+  height: 300px;
 }
