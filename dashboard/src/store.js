@@ -37,11 +37,11 @@ class Purchase {
 }
 
 //defining user1
-let wed1 = new Purchase("Grapes", 3, "Food", addDays(startOfWeek(new Date()),3), []);
-let fri1 = new Purchase("Pizza", 7.5, "Food", addDays(startOfWeek(new Date()),5), ['Mo','We','Fr']);
-let wed2 = new Purchase("Calculator", 20, "School", addDays(startOfWeek(new Date()),3), ["Mo","We"]);
+// let wed1 = new Purchase("Grapes", 3, "Food", addDays(startOfWeek(new Date()),3), []);
+// let fri1 = new Purchase("Pizza", 7.5, "Food", addDays(startOfWeek(new Date()),5), ['Mo','We','Fr']);
+// let wed2 = new Purchase("Calculator", 20, "School", addDays(startOfWeek(new Date()),3), ["Mo","We"]);
 
 
 let user1 = new Account([wed1,fri1,wed2],140)
 
-export { user1 };
+export { user1, Purchase, Account };

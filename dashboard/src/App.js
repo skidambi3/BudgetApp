@@ -5,11 +5,13 @@ import { DayPilot, DayPilotCalendar } from "daypilot-pro-react";
 import ProgressBar from './ProgressBar.js';
 import Calendar from './Calendar.js';
 import LineChart from './Chart.js';
-import { user1 } from './store.js';
-import { startOfWeek, format, addDays, getTime } from 'date-fns'
 import './Figma.css';
 import { requirePropFactory } from '@material-ui/core';
 require('typeface-roboto');
+import { user1, Purchase, Account } from './store.js';
+import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
+import { loadUser, updateUser, addPurchase } from './Backend.js'
+
 
 //going to previous and next = add/subtract 7 days
 //add currentFirstDay which use to determine what to render in that week
@@ -120,6 +122,16 @@ const showBudget = () => {
   }
 
 }
+
+// edit these values after filling in the forms in the Add Purchase page.
+let name = "Chipotle";
+let price = 11;
+let category = "Food";
+let date = "2020-12-30";
+let repetition = "No";
+let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`};
+
+
 function App() {
   // let convertedWeek = processRepetitions(thisWeek);
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
@@ -202,10 +214,7 @@ function App() {
 
 
       </div>
-
     </div>
-
-
   );
 }
 
