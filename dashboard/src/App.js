@@ -5,8 +5,9 @@ import { DayPilot, DayPilotCalendar } from "daypilot-pro-react";
 import ProgressBar from './ProgressBar.js';
 import Calendar from './Calendar.js';
 import LineChart from './Chart.js';
-import { user1 } from './store.js';
-import { startOfWeek, format, addDays, getTime } from 'date-fns'
+import { user1, Purchase, Account } from './store.js';
+import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
+import { loadUser, updateUser, addPurchase } from './Backend.js'
 
 
 //going to previous and next = add/subtract 7 days
@@ -115,6 +116,16 @@ const processRepetitions = (account) => {
   }
 }
 
+
+// edit these values after filling in the forms in the Add Purchase page.
+let name = "Chipotle";
+let price = 11;
+let category = "Food";
+let date = "2020-12-30";
+let repetition = "No";
+let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`};
+
+
 function App() {
   // let convertedWeek = processRepetitions(thisWeek);
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
@@ -122,12 +133,15 @@ function App() {
     setDate(addDays(firstDay, count));
     console.log(addDays(firstDay, count))
   }
+
+  //loadUser();  //happens everytime when clicking next/prev, without clearing data... [not on start]
+  //console.log(user1);
   const vals =  findPriceDistribution(user1,firstDay);
 
   return (
 
     <div className="App">
-
+      
       <button onClick={() => alterDate(-7)}>Previous</button>
       My Dashboard
       <button onClick={() => alterDate(7)}>Next</button>
@@ -164,16 +178,14 @@ function App() {
         </div>
 
       </div>
-      <button>
+      <button onClick={() => addPurchase(examplePurchase)}> 
         Add a purchase!
       </button>
 
-      <button>
+      <button onClick={() => updateUser()}>
         Sign Out
       </button>
     </div>
-
-
   );
 }
 
