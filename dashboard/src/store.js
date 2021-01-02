@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { startOfWeek,format,addDays,isEqual } from 'date-fns'
 
 class Week {
@@ -14,9 +14,15 @@ class Day {
   }
 }
 class Account {
-  constructor(purchases,budget) {
+  constructor(purchases,weeklyBudget) {
     this.purchases = purchases;
-    this.weeklyBudget = budget;
+    this.weeklyBudget = weeklyBudget;
+
+
+  }
+
+  componentDidMount() {
+    console.log("mounted");
   }
 }
 
@@ -36,6 +42,6 @@ let fri1 = new Purchase("Pizza", 7.5, "Food", addDays(startOfWeek(new Date()),5)
 let wed2 = new Purchase("Calculator", 20, "School", addDays(startOfWeek(new Date()),3), ["Mo","We"]);
 
 
-let user1 = new Account([wed1,fri1,wed2],100)
+let user1 = new Account([wed1,fri1,wed2],140)
 
 export { user1 };
