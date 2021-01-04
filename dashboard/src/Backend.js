@@ -4,7 +4,7 @@ import { user1, Purchase, Account } from './store.js';
 import { parseJSON } from 'date-fns';
 
 
-const url = 'http://localhost:5000/purchases';
+const url = 'https://cors-anywhere.herokuapp.com/'+'mysql://beff28cd12f519:e3a36fc4@us-cdbr-east-02.cleardb.com/heroku_7ee16bba47948d7?reconnect=true';
 
 // gets data and loads into account onStart
 const loadUser = async () => {

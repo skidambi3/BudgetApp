@@ -111,9 +111,9 @@ const statusMessage = (account, budget, categoryPrices, startOfWeek) => {
   }
 }
 
-const parseRepetitions = (repetition, purchase) => {
+const parseRepetitions = (repetition) => {
   let dates = [];
-  if (repetition === "no") {
+  if (repetition === "No") {
     return repetition;
   }
   let startIndex = 0;
@@ -127,13 +127,6 @@ const parseRepetitions = (repetition, purchase) => {
   return dates;
 }
 
-const processRepetitions = (account) => {
-  for (const purchase in account.purchases) {
-    if (purchase.reptitions.length > 0) {
-
-    }
-  }
-}
 
 
 
@@ -147,7 +140,6 @@ let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category
 
 
 function App() {
-  // let convertedWeek = processRepetitions(thisWeek);
   const [account,setAccount] = useState(user1);
 
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
@@ -223,39 +215,10 @@ function App() {
         <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
         <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
         </span>
-        <div id="add-purchase"> Add Purchase</div>
+        <div id="add-purchase" onClick={() => addPurchase(examplePurchase)}>  Add Purchase</div>
         <div id="sign-out"> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => alterBudget(account)}>Alter Budget</button>
-
-
-        {/* <div id="categories"></div>
-        <span id="e2_94">
-          Category Breakdown:
-      </span>
-
-        <div class="wrapper">
-          <div class="status-report">
-            <h2>Status Report:</h2>
-            <h3>You've Spent ${findPurchaseTotal(user1, firstDay)} Dollars</h3>
-
-            <h4>You're projected to spend {findPurchaseTotal(user1, firstDay) / user1.weeklyBudget * 100}% of your weekly budget</h4>
-            <h5>Status: {statusMessage(user1, user1.weeklyBudget, vals, firstDay)}</h5>
-            <div>
-              {
-                Object.keys(vals).map((key, index) => (
-                  <p key={index}>  {key} : ${vals[key]}</p>
-                ))
-              }
-            </div>
-          </div>
-          <div class="visualizations">
-            Visualizations
-          <LineChart dailyCosts={generateDailyCosts(user1, firstDay)} />
-
-          </div> */}
-
-        {/* </div> */}
 
 
 

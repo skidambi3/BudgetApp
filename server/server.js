@@ -14,9 +14,9 @@ app.use(express.urlencoded({extended: false}));
 
 // create connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'newuser',
-    password: 'password',
+    host: 'us-cdbr-east-02.cleardb.com',
+    user: 'beff28cd12f519',
+    password: 'e3a36fc4',
     database: 'purchases_db'
 });
 db.connect((err) => {
