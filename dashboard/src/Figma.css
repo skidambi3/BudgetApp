@@ -7,19 +7,21 @@
 	height:730px;
 	position:absolute;
 }
-#e1_3 {
+#dashboard-title {
+	background-color: rgba(104.00000140070915, 218.00000220537186, 199.0000033378601, 1);
 	color:rgba(0, 0, 0, 1);
 	opacity:1;
-	width:276px;
+	width:260px;
 	height:42px;
 	position:absolute;
-	left:434px;
-	top:14px;
+	left:432px;
+	top:8px;
 	font-family: Roboto;
 	text-align:center;
-	font-size:36px;
-	letter-spacing:0;
+	font-size:33px;
+	letter-spacing:1px;
 	line-height:undefined;
+	font-weight: bold;
 }
 #tues-header-box {
 	background-color:rgba(104.00000140070915, 218.00000220537186, 199.0000033378601, 1);
@@ -445,14 +447,14 @@
     background-color:rgba(104.00000140070915, 218.00000220537186, 199.0000033378601, 1);
 	border:none;
 	opacity:1;
-	width:120px;
-	height:25px;
+	width:99px;
+	height:21px;
 	position:absolute;
 	left:585px;
-    top:60px;
+    top:62px;
 	font-family:Roboto;
     margin: auto;
-    font-size:16px;
+    font-size:14px;
 	letter-spacing:0;
     line-height:undefined;
 

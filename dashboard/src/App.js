@@ -4,13 +4,14 @@ import React, { useState, Component } from 'react';
 import { DayPilot, DayPilotCalendar } from "daypilot-pro-react";
 import ProgressBar from './ProgressBar.js';
 import Calendar from './Calendar.js';
-import LineChart from './Chart.js';
+import {LineChart,BarChart} from './Chart.js';
+
 import './Figma.css';
 import { requirePropFactory } from '@material-ui/core';
-require('typeface-roboto');
 import { user1, Purchase, Account } from './store.js';
 import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
 import { loadUser, updateUser, addPurchase } from './Backend.js'
+require('typeface-roboto');
 
 
 //going to previous and next = add/subtract 7 days
@@ -37,18 +38,37 @@ const findPurchaseTotal = (account, startOfWeek) => {
 }
 
 const findPriceDistribution = (account, startOfWeek) => {
-  let prices = {}
+  let prices = {};
+  let pricesArr = [];
   for (const purchase of account.purchases) {
-    if (purchase.category in prices && (getTime(purchase.day) >= getTime(startOfWeek) && getTime(purchase.day) < getTime(addDays(startOfWeek, 7)))) {
-      prices[purchase.category] += purchase.price;
+    if (purchase.repetition.length > 0) {
+      if (purchase.category in prices) {
+        prices[purchase.category] += purchase.price*purchase.repetition.length;
+
+      }
+      else {
+        prices[purchase.category] = purchase.price*purchase.repetition.length;
+
+      }
     }
-    else {
-      prices[purchase.category] = purchase.price;
+    else if (getTime(purchase.day) >= getTime(startOfWeek) && getTime(purchase.day) < getTime(addDays(startOfWeek, 7))){
+      console.log(purchase.name)
+      if (purchase.category in prices) {
+        prices[purchase.category] += purchase.price;
+      }
+      else {
+        prices[purchase.category] = purchase.price;
+
+      }
     }
+
+    console.log(account)
 
   }
-
-  return prices;
+  for (const key in Object.keys(prices)) {
+    pricesArr.push(prices[Object.keys(prices)[key]])
+  }
+  return [pricesArr,Object.keys(prices)];
 }
 
 const generateDailyCosts = (account, startOfWeek) => {
@@ -115,13 +135,7 @@ const processRepetitions = (account) => {
   }
 }
 
-const showBudget = () => {
-  if (document.getElementById("alter-budget-input") !== null) {
-    console.log(document.getElementById("alter-budget-input").value);
-    user1.weeklyBudget = document.getElementById("alter-budget-input").value;
-  }
 
-}
 
 // edit these values after filling in the forms in the Add Purchase page.
 let name = "Chipotle";
@@ -134,53 +148,85 @@ let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category
 
 function App() {
   // let convertedWeek = processRepetitions(thisWeek);
+  const [account,setAccount] = useState(user1);
+
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
   const alterDate = (count) => {
     setDate(addDays(firstDay, count));
     console.log(addDays(firstDay, count))
   }
+
+  const visualizationDict = {
+    one: <LineChart dailyCosts={generateDailyCosts(account, firstDay)} />,
+    two: <BarChart dailyCosts={findPriceDistribution(account,firstDay)[0]} categoryLabels={findPriceDistribution(account,firstDay)[1]} />
+  }
   const vals = findPriceDistribution(user1, firstDay);
-  let visualization =           [(<LineChart dailyCosts={generateDailyCosts(user1, firstDay)} />),(<LineChart dailyCosts={[20,18,15,14,12,4,2]} />)];
+  const [visualization,setVisualization] = useState(["one","two"])
+  //create a copy, splice copy,set original visualization to copy
+  //find computer ip address, disable firewall for that port (verify 3306 is right and open)
   const toggleVisualization = () => {
-    visualization.splice(visualization.length,0,visualization.splice(0,1)[0]);
-    console.log(visualization);
     debugger;
+
+    const firstElem = visualization[0]
+    visualization.splice(0,1);
+    console.log(visualization);
+    const megaClone = visualization.concat([firstElem]);
+    console.log(megaClone);
+    console.log( Object.assign(megaClone));
+    setVisualization( Object.assign(megaClone));
 
   }
 
+  const alterBudget = (account) => {
+    if (document.getElementById("alter-budget-input") !== null) {
+      console.log(document.getElementById("alter-budget-input").value);
+      account.weeklyBudget = document.getElementById("alter-budget-input").value;
+      handleChange(account);
+    }
+
+  }
+
+
+
+  const handleChange = (newAccount) => {
+    const accountCopy = Object.assign(Object.create(Object.getPrototypeOf(newAccount)), newAccount);
+    debugger;
+
+    setAccount(accountCopy);
+  }
   return (
 
     <div className="App">
 
-      <div id="frame"><span id="e1_3">My Dashboard</span>
+      <div id="frame"><span id="dashboard-title">My Dashboard</span>
         <div id="next-box"></div>
         <span onClick={() => alterDate(-7)} id="previous">Previous</span>
         <div id="previous-box"></div>
         <span onClick={() => alterDate(7)} id="next">Next</span>
 
-        <Calendar startDate={firstDay} />
+        <Calendar onChange ={handleChange} startDate={firstDay} account={account}/>
         {/* TODO: grid layout from MDN guide for columns */}
 
 
         <div id="report-header-box"></div>
         <div id="visualization-header-box"></div>
-        <span id="report-header">Status Report: {statusMessage(user1, user1.weeklyBudget, vals, firstDay)[0]}</span>
+        <span id="report-header">Status Report: {statusMessage(account, account.weeklyBudget, vals, firstDay)[0]}</span>
         <span onClick={() => toggleVisualization()} id="visualization-header">Toggle Visualizations</span>
         <div id="report"></div>
         <div id="visualization">
-          {visualization[0]}
+          {visualizationDict[visualization[0]]}
         </div>
-        <ProgressBar percentage={(findPurchaseTotal(user1, firstDay) / user1.weeklyBudget * 100)>99 ? 100 : (findPurchaseTotal(user1, firstDay) / user1.weeklyBudget * 100)} />
+        <ProgressBar percentage={(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)>99 ? 100 : (findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)} />
 
 
 
-        <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(user1, firstDay) / user1.weeklyBudget * 100)}% of your weekly budget</span>
-        <span id="recommendation">Recommendation: {statusMessage(user1, user1.weeklyBudget, vals, firstDay)[1]}
+        <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
+        <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
         </span>
         <div id="add-purchase"> Add Purchase</div>
         <div id="sign-out"> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
-          <button id="alter-budget"   onClick={() => showBudget()}>Alter Budget</button>
+          <button id="alter-budget"   onClick={() => alterBudget(account)}>Alter Budget</button>
 
 
         {/* <div id="categories"></div>

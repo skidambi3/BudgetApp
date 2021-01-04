@@ -46,43 +46,41 @@ class Calendar extends Component {
 
     this.state = {
       startDate: props.startDate,
-      account: user1
 
     }
   }
     handleRemove(purchase,date) {
       console.log(purchase)
-      for (let i = 0; i < this.state.account.purchases.length; i++) {
-        if (objectsAreEqual(purchase,this.state.account.purchases[i])) {
+      for (let i = 0; i < this.props.account.purchases.length; i++) {
+        if (objectsAreEqual(purchase,this.props.account.purchases[i])) {
           if (purchase.repetition.length > 0) {
             for (let j = 0; j < purchase.repetition.length; j++) {
               if (format(date,"EEEEEE")===purchase.repetition[j]) {
-                this.state.account.purchases[i].repetition.splice(j,1);
+                this.props.account.purchases[i].repetition.splice(j,1);
               }
             }
           }
 
 
           else {
-            console.log(this.state.account.purchases[i]);
-            this.state.account.purchases.splice(i,1);
+            console.log(this.props.account.purchases[i]);
+            this.props.account.purchases.splice(i,1);
           }
         }
 
 
       }
+      console.log(purchase.name+purchase.repetition.join());
+      this.props.onChange(this.props.account);
 
-      this.setState({
-        account: this.state.account
-      })
     }
     returnPurchaseInfo(account,date) {
       let purchases = [];
-      console.log("rerendered");
+
       for (const purchase of account.purchases) {
 
         if (purchase.repetition.includes(format(date, 'EEEEEE')) || isEqual(purchase.day, date)) {
-          purchases.push(<CalendarItem key={purchase.name} onRemove={this.handleRemove.bind(this,purchase,date)} purchase={purchase} account={account} date={date} />)
+          purchases.push(<CalendarItem key={purchase.name+purchase.repetition.join()} onRemove={this.handleRemove.bind(this,purchase,date)} purchase={purchase} account={account} date={date} />)
 
         }
       }
@@ -96,19 +94,19 @@ class Calendar extends Component {
         <div id="sun-header-box"></div>
         <span id="sun-header">Su {format(addDays(this.props.startDate, 0), ' M/d')}</span>
         <div id="sun-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 0))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 0))}
         </div>
 
         <div id="mon-header-box"></div>
         <span id="mon-header">Mo {format(addDays(this.props.startDate, 1), ' M/d')}</span>
         <div id="mon-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 1))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 1))}
         </div>
 
         <div id="tues-header-box"></div>
         <span id="tues-header">Tu {format(addDays(this.props.startDate, 2), ' M/d')}</span>
         <div id="tues-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 2))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 2))}
         </div>
 
         <div id="wed-header-box"></div>
@@ -116,26 +114,26 @@ class Calendar extends Component {
           We {format(addDays(this.props.startDate, 3), ' M/d')}
         </span>
         <div id="wed-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 3))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 3))}
         </div>
 
 
         <div id="thurs-header-box"></div>
         <span id="thurs-header">Th {format(addDays(this.props.startDate, 4), ' M/d')}</span>
         <div id="thurs-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 4))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 4))}
         </div>
 
         <div id="fri-header-box"></div>
         <span id="fri-header">Fr {format(addDays(this.props.startDate, 5), ' M/d')}</span>
         <div id="fri-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 5))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 5))}
         </div>
 
         <div id="sat-header-box"></div>
         <span id="sat-header">Sa {format(addDays(this.props.startDate, 6), ' M/d')}</span>
         <div id="sat-box">
-          {this.returnPurchaseInfo(this.state.account, addDays(this.props.startDate, 6))}
+          {this.returnPurchaseInfo(this.props.account, addDays(this.props.startDate, 6))}
         </div>
 
 
