@@ -21,9 +21,20 @@ app.get('/purchases',  (req, res) => {
     const sql = 'SELECT * FROM purchases_db';
 
     connection.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send(result);
-    });
+                if (err) throw err;
+                res.send(result);
+            });
+    // try {
+    //     connection.query(sql, (err, result) => {
+    //         if (err) throw err;
+    //         res.send(result);
+    //     });
+    // }
+    // catch (error) {
+    //     console.log("hello")
+    //     console.log(error);
+
+
 });
 
 // post request: add a purchase

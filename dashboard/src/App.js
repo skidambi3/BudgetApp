@@ -183,7 +183,7 @@ function App() {
   const handleChange = (newAccount) => {
     const accountCopy = Object.assign(Object.create(Object.getPrototypeOf(newAccount)), newAccount);
     debugger;
-
+    console.log(accountCopy);
     setAccount(accountCopy);
   }
   return (
@@ -215,7 +215,7 @@ function App() {
         <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
         <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
         </span>
-        <div id="add-purchase" onClick={() => addPurchase(examplePurchase)}>  Add Purchase</div>
+        <div id="add-purchase" onClick={() => addPurchase(examplePurchase,account,handleChange)}>  Add Purchase</div>
         <div id="sign-out"> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => alterBudget(account)}>Alter Budget</button>
