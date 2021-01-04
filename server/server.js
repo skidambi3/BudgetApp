@@ -13,24 +13,14 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // create connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'newuser',
-    password: 'password',
-    database: 'purchases_db'
-});
-db.connect((err) => {
-    if (err) {
-        throw(err);
-    }
-    console.log("MySQL connected...");
-});
+const connection = mysql.createConnection('mysql://beff28cd12f519:e3a36fc4@us-cdbr-east-02.cleardb.com/heroku_7ee16bba47948d7?reconnect=true');
 
 // get request: select all purchases
 app.get('/purchases',  (req, res) => {
-    const sql = 'SELECT * FROM purchases';
+    //res.send("Hello World");
+    const sql = 'SELECT * FROM purchases_db';
 
-    db.query(sql, (err, result) => {
+    connection.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);
     });
@@ -40,8 +30,8 @@ app.get('/purchases',  (req, res) => {
 app.post('/purchases', (req, res) => {
     console.log(req.body);
 
-    let sql = "INSERT INTO purchases SET ?";
-    let query = db.query(sql, [req.body], (err, result) => {
+    let sql = "INSERT INTO purchases_db SET ?";
+    let query = connection.query(sql, [req.body], (err, result) => {
         if (err) throw err;
         console.log(result);
         res.send('purchase added');
@@ -51,8 +41,8 @@ app.post('/purchases', (req, res) => {
 // put request: edit a purchase name
 app.put('/purchases/update/:id', (req, res) => {
     let newName = 'Hulu';
-    let sql = `UPDATE purchases SET name = '${newName}' WHERE idPurchase = ${req.params.id}`;
-    let query = db.query(sql, (err, result) => {
+    let sql = `UPDATE purchases_db SET name = '${newName}' WHERE idPurchase = ${req.params.id}`;
+    let query = connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
         res.send('purchase updated');
@@ -61,12 +51,16 @@ app.put('/purchases/update/:id', (req, res) => {
 
 // delete request: delete a purchase
 app.delete('/purchases/delete/:id', (req, res) => {
-    let sql = `DELETE from purchases WHERE idPurchase = ${req.params.id}`;
-    let query = db.query(sql, (err, result) => {
+    let sql = `DELETE from purchases_db WHERE idPurchase = ${req.params.id}`;
+    let query = connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
         res.send('purchase deleted');
     });
 });
 
-app.listen(5000, () => console.log('Server started on port 5000'));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
