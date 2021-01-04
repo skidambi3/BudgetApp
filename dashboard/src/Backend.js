@@ -49,4 +49,11 @@ const addPurchase = async (purchase) => {
       })
 }
 
-export { loadUser, updateUser, addPurchase }
+const deletePurchase = async (itemId) => {
+  axios.delete(
+    `http://localhost:5000/purchases/delete/${itemId}`
+   )
+  console.log("Purchase deleted.")
+  }
+
+export { loadUser, updateUser, addPurchase, deletePurchase }
