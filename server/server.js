@@ -52,7 +52,7 @@ app.post('/purchases', (req, res) => {
 // put request: edit a purchase name
 app.put('/purchases/update/:id', (req, res) => {
     let newName = 'Hulu';
-    let sql = `UPDATE purchases_db SET name = '${newName}' WHERE idPurchase = ${req.params.id}`;
+    let sql = `UPDATE purchases_db SET name = '${newName}' WHERE id = ${req.params.id}`;
     let query = connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
@@ -62,7 +62,7 @@ app.put('/purchases/update/:id', (req, res) => {
 
 // delete request: delete a purchase
 app.delete('/purchases/delete/:id', (req, res) => {
-    let sql = `DELETE from purchases_db WHERE idPurchase = ${req.params.id}`;
+    let sql = `DELETE from purchases_db WHERE id = ${req.params.id}`;
     let query = connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
