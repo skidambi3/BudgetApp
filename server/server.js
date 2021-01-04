@@ -39,9 +39,8 @@ app.post('/purchases', (req, res) => {
 });
 
 // put request: edit a purchase name
-app.put('/purchases/update/:id', (req, res) => {
-    let newName = 'Hulu';
-    let sql = `UPDATE purchases_db SET name = '${newName}' WHERE id = ${req.params.id}`;
+app.put('/purchases/update/:repetition/:id', (req, res) => {
+    let sql = `UPDATE purchases_db SET repetition = '${req.params.repetition}' WHERE id = ${req.params.id}`;
     let query = connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
