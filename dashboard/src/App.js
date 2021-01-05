@@ -209,9 +209,12 @@ function App() {
 
 
 
-        <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
+        <span id="e2_91">You’re projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
         <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
         </span>
+        <span id="total-spending">Your current budget is ${account.weeklyBudget} and current total spending is ${findPurchaseTotal(account, firstDay)}</span>
+
+
         <div id="add-purchase" onClick={() => addPurchase(examplePurchase,account,handleChange)}>  Add Purchase</div>
         <div id="sign-out"> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />

@@ -307,7 +307,7 @@
 	height:21px;
 	position:absolute;
 	left:40px;
-	top:529px;
+	top:585px;
 	font-family:Roboto;
 	text-align:center;
 	font-size:25px;
@@ -598,7 +598,23 @@
 	height:20px;
 	position:absolute;
 	left:62px;
-	top:457px;
+	top:460px;
+	text-align:center;
+	font-size:17px;
+	font-family:Roboto;
+
+	letter-spacing:0;
+	line-height:undefined;
+}
+
+#total-spending {
+	color:rgba(0, 0, 0, 1);
+	opacity:1;
+	width:468px;
+	height:20px;
+	position:absolute;
+	left:62px;
+	top:535px;
 	text-align:center;
 	font-size:17px;
 	font-family:Roboto;
