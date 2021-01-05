@@ -16,8 +16,35 @@ app.use(express.urlencoded({extended: false}));
 const connection = mysql.createConnection('mysql://beff28cd12f519:e3a36fc4@us-cdbr-east-02.cleardb.com/heroku_7ee16bba47948d7?reconnect=true');
 
 // get request: select all purchases
+
+function handleDisconnect() {
+    connection = mysql.createConnection('mysql://beff28cd12f519:e3a36fc4@us-cdbr-east-02.cleardb.com/heroku_7ee16bba47948d7?reconnect=true'); // Recreate the connection, since
+                                                    // the old one cannot be reused.
+
+    connection.connect(function(err) {              // The server is either down
+      if(err) {                                     // or restarting (takes a while sometimes).
+        console.log('error when connecting to db:', err);
+        setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+      }                                     // to avoid a hot loop, and to allow our node script to
+    });                                     // process asynchronous requests in the meantime.
+                                            // If you're also serving http, display a 503 error.
+    connection.on('error', function(err) {
+      console.log('db error', err);
+      if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+        handleDisconnect();                         // lost due to either server restart, or a
+      } else {                                      // connnection idle timeout (the wait_timeout
+        throw err;                                  // server variable configures this)
+      }
+    });
+  }
+
 app.get('/purchases',  (req, res) => {
+    console.log(connection);
+
     //res.send("Hello World");
+    // if (connection.State != ConnectionState.Open) {
+    //     connection.Open()
+    // }
     const sql = 'SELECT * FROM purchases_db';
 
 
@@ -48,12 +75,19 @@ app.post('/purchases', (req, res) => {
 
 // put request: edit a purchase name
 app.put('/purchases/update/:repetition/:id', (req, res) => {
-    let sql = `UPDATE purchases_db SET repetition = '${req.params.repetition}' WHERE id = ${req.params.id}`;
-    let query = connection.query(sql, (err, result) => {
+
+    try {
+        let sql = `UPDATE purchases_db SET repetition = '${req.params.repetition}' WHERE id = ${req.params.id}`;
+        let query = connection.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
         res.send('purchase updated');
-    });
+        });
+    }
+    catch (error) {
+        console.log(error);
+        handleDisconnect();
+    }
 });
 
 // delete request: delete a purchase

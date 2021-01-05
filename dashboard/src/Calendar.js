@@ -19,7 +19,6 @@ import {deletePurchase,updatePurchase} from './Backend.js';
 
 const returnPurchaseInfo = (account, date) => {
   let purchases = [];
-  debugger;
   for (const purchase of account.purchases) {
 
     if (purchase.repetition.includes(format(date, 'EEEEEE')) || isEqual(purchase.day, date)) {
@@ -68,7 +67,7 @@ class Calendar extends Component {
       console.log(purchase)
       for (let i = 0; i < this.props.account.purchases.length; i++) {
         if (objectsAreEqual(purchase,this.props.account.purchases[i])) {
-          if (purchase.repetition.length > 0) {
+          if (purchase.repetition.length > 1) {
             for (let j = 0; j < purchase.repetition.length; j++) {
               if (format(date,"EEEEEE")===purchase.repetition[j]) {
                 this.props.account.purchases[i].repetition.splice(j,1);
@@ -79,7 +78,6 @@ class Calendar extends Component {
 
 
           else {
-            console.log(this.props.account.purchases[i].id);
             deletePurchase(this.props.account.purchases[i].id);
             console.log(this.props.account);
             this.props.account.purchases.splice(i,1);
@@ -94,11 +92,10 @@ class Calendar extends Component {
     }
     returnPurchaseInfo(account,date) {
       let purchases = [];
-      debugger;
       for (const purchase of account.purchases) {
 
         if (purchase.repetition.includes(format(date, 'EEEEEE')) || isEqual(purchase.day, date)) {
-          purchases.push(<CalendarItem key={purchase.name+purchase.repetition.join()} onRemove={this.handleRemove.bind(this,purchase,date)} purchase={purchase} account={account} date={date} />)
+          purchases.push(<CalendarItem key={purchase.id} onRemove={this.handleRemove.bind(this,purchase,date)} purchase={purchase} account={account} date={date} />)
 
         }
       }

@@ -62,7 +62,6 @@ const findPriceDistribution = (account, startOfWeek) => {
       }
     }
 
-    console.log(account)
 
   }
   for (const key in Object.keys(prices)) {
