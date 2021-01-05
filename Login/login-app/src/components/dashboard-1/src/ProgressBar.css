@@ -1,18 +1,15 @@
 .progress-bar {
-    border: .3px solid black;
     position: relative;
     margin-left: auto;
     margin-right: auto;
     height: 20px;
     width: 350px;
     border-radius:50px;
-    position:absolute;
-	left:130px;
-	top:500px;
+    border: 1px solid #333;
 }
 
 .filler {
-    background: rgba(104.00000140070915, 218.00000220537186, 199.0000033378601, 1);
+    background: #1DA598;
     height: 100%;
     border-radius: inherit;
     transition: width .2s ease-in;
