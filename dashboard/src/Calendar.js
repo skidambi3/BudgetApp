@@ -3,7 +3,8 @@ import './Calendar.css';
 import { user1, Purchase } from './store.js';
 import { startOfWeek, format, addDays, isEqual } from 'date-fns'
 import CalendarItem from './CalendarItem';
-import "./Figma.css"
+import "./Figma.css";
+import {deletePurchase,updatePurchase} from './Backend.js';
 
 // const removePurchase = (purchase,account) => {
 //   console.log(purchase);
@@ -18,6 +19,7 @@ import "./Figma.css"
 
 const returnPurchaseInfo = (account, date) => {
   let purchases = [];
+  debugger;
   for (const purchase of account.purchases) {
 
     if (purchase.repetition.includes(format(date, 'EEEEEE')) || isEqual(purchase.day, date)) {
@@ -40,6 +42,19 @@ const objectsAreEqual = (obj1, obj2) => {
   return true;
 };
 
+const arrToStringRepetition = (repetition) => {
+  let newString = ""
+  for (let i = 0; i < repetition.length; i++) {
+    if (i > 0) {
+      newString += "," + repetition[i];
+    }
+    else {
+      newString += repetition[i];
+    }
+  }
+  return newString;
+}
+
 class Calendar extends Component {
   constructor(props) {
     super(props)
@@ -57,13 +72,16 @@ class Calendar extends Component {
             for (let j = 0; j < purchase.repetition.length; j++) {
               if (format(date,"EEEEEE")===purchase.repetition[j]) {
                 this.props.account.purchases[i].repetition.splice(j,1);
+                updatePurchase(this.props.account.purchases[i].id, arrToStringRepetition(this.props.account.purchases[i].repetition))
               }
             }
           }
 
 
           else {
-            console.log(this.props.account.purchases[i]);
+            console.log(this.props.account.purchases[i].id);
+            deletePurchase(this.props.account.purchases[i].id);
+            console.log(this.props.account);
             this.props.account.purchases.splice(i,1);
           }
         }
@@ -76,7 +94,7 @@ class Calendar extends Component {
     }
     returnPurchaseInfo(account,date) {
       let purchases = [];
-
+      //debugger;
       for (const purchase of account.purchases) {
 
         if (purchase.repetition.includes(format(date, 'EEEEEE')) || isEqual(purchase.day, date)) {

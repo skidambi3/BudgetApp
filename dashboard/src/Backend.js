@@ -6,47 +6,99 @@ import { parseJSON } from 'date-fns';
 
 const url = 'http://localhost:5000/purchases';
 
-// gets data and loads into account onStart
-const loadUser = async () => {
-  const response = await fetch(
-    url
-  );
-  const data = await response.json();
-  console.log("User loaded.")
-  console.log(data);
-  getPurchases(data);
+const parseRepetitions = (repetition) => {
+  let dates = [];
+  if (repetition === "No") {
+    return [];
+  }
+  let startIndex = 0;
+  for (let i = 0; i < repetition.length; i++) {
+    if (repetition.substring(i, i + 1) === ",") {
+      dates.push(repetition.substring(startIndex, i));
+      startIndex = i + 1;
+    }
+  }
+  dates.push(repetition.substring(startIndex, repetition.length));
+  return dates;
 }
 
-// gets data, empties account, loads data into account
-const updateUser = async () => {
+
+// takes in uuid, gets data and loads into account onStart
+const loadUser = async (uuid, handleChange) => {
   const response = await fetch(
-    url
+    `http://localhost:5000/users/${uuid}`
   );
   const data = await response.json();
-  console.log("User updated.")
   console.log(data);
-  user1.purchases = [];
-  getPurchases(data);
+
+  let account;
+  if (data.length == 0) {         // if account doesn't exist, add to users_db
+    console.log(`User ${uuid} created.`)
+    let newUser = {uuid: uuid, budget: 150}
+    addUser(newUser);
+    return new Account([], newUser.budget, uuid);    //set the acount accessible in App.js to this.
+  } else {                        // if account exists, load and display its data.
+    console.log(`User ${uuid} loaded.`)
+    account = new Account([], data.budget, uuid);
+    const response = await fetch(
+      `http://localhost:5000/purchases/${account.uuid}`
+    );
+    const purchases = await response.json();
+    getPurchases(purchases, account, handleChange);
+  }
 }
 
-const getPurchases = (data) => {
+
+const addUser = async (uuid) => {
+  axios.post(`http://localhost:5000/users`, uuid)
+    .then(response => {
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+}
+
+// gets data, corresponding to account, empties account, loads data into account
+const updateUser = async (account,handleChange) => {
+  const response = await fetch(
+    `http://localhost:5000/purchases/${account.uuid}`
+  );
+  const data = await response.json();
+  console.log(`User ${account.uuid} updated.`)
+  console.log(data);
+  account.purchases = [];
+  getPurchases(data, account, handleChange);
+}
+
+// adds purchases from data to account object to be displayed
+const getPurchases = (data,account,handleChange) => {
   var item;
   for (let i = 0; i < data.length; i++) {
     item = data[i];
-    var purchase = new Purchase(item.name, item.price, item.category, parseJSON(item.date), item.repetition);
-    user1.purchases.push(purchase);
+    var purchase = new Purchase(item.id,item.name, item.price, item.category, parseJSON(item.date), parseRepetitions(item.repetition), account.uuid);
+    account.purchases.push(purchase);
   }
-  console.log(user1)
+  console.log(account);
+  handleChange(account);
+
 }
 
-const addPurchase = async (purchase) => {
+const addPurchase = async (purchase,account,handleChange) => {
     axios.post(url, purchase)
       .then(response => {
         console.log(response)
+        updateUser(account,handleChange)
+
       })
       .catch(error => {
         console.log(error)
       })
+}
+
+const updatePurchase = async (itemId, repetition) => {
+  axios.put(`http://localhost:5000/purchases/update/${repetition}/${itemId}`)
+  console.log("Purchase updated")
 }
 
 const deletePurchase = async (itemId) => {
@@ -56,11 +108,4 @@ const deletePurchase = async (itemId) => {
   console.log("Purchase deleted.")
   }
 
-const updatePurchase = async (itemId, repetition) => {
-  axios.put(
-    `http://localhost:5000/purchases/update/${repetition}/${itemId}`
-  )
-  console.log("Purchase updated.")
-}
-
-export { loadUser, updateUser, addPurchase, deletePurchase, updatePurchase }
+export { loadUser, updateUser, addPurchase, deletePurchase,updatePurchase }

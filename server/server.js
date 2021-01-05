@@ -19,12 +19,31 @@ const connection = mysql.createConnection('mysql://beff28cd12f519:e3a36fc4@us-cd
 app.get('/purchases',  (req, res) => {
     //res.send("Hello World");
     const sql = 'SELECT * FROM purchases_db';
-
-    connection.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send(result);
-    });
+    try {
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }
+    catch (error) {
+        console.log("hello")
+        console.log(error);
+    }
 });
+
+// get request: select all purchases with uuid
+app.get('/purchases/:uuid', (req, res) => {
+    const sql = `SELECT * FROM purchases_db WHERE uuid = ${req.params.uuid}`;
+    try {
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+})
 
 // post request: add a purchase
 app.post('/purchases', (req, res) => {
@@ -58,6 +77,50 @@ app.delete('/purchases/delete/:id', (req, res) => {
     });
 });
 
+
+
+
+
+// get request: select all users
+app.get('/users',  (req, res) => {
+    const sql = 'SELECT * FROM users_db';
+    try {
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+
+// get request: select all users with uuid
+app.get('/users/:uuid', (req, res) => {
+    const sql = `SELECT * FROM users_db WHERE uuid = ${req.params.uuid}`;
+    try {
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+})
+
+
+// post request: add a user
+app.post('/users', (req, res) => {
+    console.log(req.body);
+
+    let sql = "INSERT INTO users_db SET ?";
+    let query = connection.query(sql, [req.body], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send('user added');
+    });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

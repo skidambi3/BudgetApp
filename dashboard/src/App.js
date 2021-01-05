@@ -111,9 +111,9 @@ const statusMessage = (account, budget, categoryPrices, startOfWeek) => {
   }
 }
 
-const parseRepetitions = (repetition, purchase) => {
+const parseRepetitions = (repetition) => {
   let dates = [];
-  if (repetition === "no") {
+  if (repetition === "No") {
     return repetition;
   }
   let startIndex = 0;
@@ -127,13 +127,6 @@ const parseRepetitions = (repetition, purchase) => {
   return dates;
 }
 
-const processRepetitions = (account) => {
-  for (const purchase in account.purchases) {
-    if (purchase.reptitions.length > 0) {
-
-    }
-  }
-}
 
 
 
@@ -141,13 +134,13 @@ const processRepetitions = (account) => {
 let name = "Chipotle";
 let price = 11;
 let category = "Food";
-let date = "2020-12-30";
-let repetition = "No";
-let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`};
+let date = "2022-12-30";
+let repetition = "Th";
+let uuid = 0;
+let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`, uuid: `${uuid}`};
 
 
 function App() {
-  // let convertedWeek = processRepetitions(thisWeek);
   const [account,setAccount] = useState(user1);
 
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
@@ -165,7 +158,6 @@ function App() {
   //create a copy, splice copy,set original visualization to copy
   //find computer ip address, disable firewall for that port (verify 3306 is right and open)
   const toggleVisualization = () => {
-    debugger;
 
     const firstElem = visualization[0]
     visualization.splice(0,1);
@@ -190,8 +182,7 @@ function App() {
 
   const handleChange = (newAccount) => {
     const accountCopy = Object.assign(Object.create(Object.getPrototypeOf(newAccount)), newAccount);
-    debugger;
-
+    console.log(accountCopy);
     setAccount(accountCopy);
   }
   return (
@@ -223,40 +214,12 @@ function App() {
         <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
         <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
         </span>
-        <button id="add-purchase" onClick={() => updatePurchase(1, "Mo,Tu")}> Add Purchase</button>
-        <button id="sign-out" onClick={() => updateUser()}> Sign Out</button>
-        
+
+        <div id="add-purchase" onClick={() => addPurchase(examplePurchase,account,handleChange)}>  Add Purchase</div>
+        <button id="sign-out" onClick={() => loadUser(0, handleChange)}> Sign Out</button>
+
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => alterBudget(account)}>Alter Budget</button>
-
-
-        {/* <div id="categories"></div>
-        <span id="e2_94">
-          Category Breakdown:
-      </span>
-
-        <div class="wrapper">
-          <div class="status-report">
-            <h2>Status Report:</h2>
-            <h3>You've Spent ${findPurchaseTotal(user1, firstDay)} Dollars</h3>
-
-            <h4>You're projected to spend {findPurchaseTotal(user1, firstDay) / user1.weeklyBudget * 100}% of your weekly budget</h4>
-            <h5>Status: {statusMessage(user1, user1.weeklyBudget, vals, firstDay)}</h5>
-            <div>
-              {
-                Object.keys(vals).map((key, index) => (
-                  <p key={index}>  {key} : ${vals[key]}</p>
-                ))
-              }
-            </div>
-          </div>
-          <div class="visualizations">
-            Visualizations
-          <LineChart dailyCosts={generateDailyCosts(user1, firstDay)} />
-
-          </div> */}
-
-        {/* </div> */}
 
 
 
