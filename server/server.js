@@ -20,20 +20,17 @@ app.get('/purchases',  (req, res) => {
     //res.send("Hello World");
     const sql = 'SELECT * FROM purchases_db';
 
-    connection.query(sql, (err, result) => {
-                if (err) throw err;
-                res.send(result);
-            });
-    // try {
-    //     connection.query(sql, (err, result) => {
-    //         if (err) throw err;
-    //         res.send(result);
-    //     });
-    // }
-    // catch (error) {
-    //     console.log("hello")
-    //     console.log(error);
 
+    try {
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    }
+    catch (error) {
+        console.log("hello")
+        console.log(error);
+    }
 
 });
 

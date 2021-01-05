@@ -3,7 +3,8 @@ import './Calendar.css';
 import { user1 } from './store.js';
 import { startOfWeek, format, addDays, isEqual } from 'date-fns'
 import CalendarItem from './CalendarItem';
-import "./Figma.css"
+import "./Figma.css";
+import {deletePurchase} from './Backend.js';
 
 // const removePurchase = (purchase,account) => {
 //   console.log(purchase);
@@ -63,7 +64,9 @@ class Calendar extends Component {
 
 
           else {
-            console.log(this.props.account.purchases[i]);
+            console.log(this.props.account.purchases[i].id);
+            deletePurchase(this.props.account.purchases[i].id);
+            console.log(this.props.account);
             this.props.account.purchases.splice(i,1);
           }
         }

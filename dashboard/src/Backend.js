@@ -9,11 +9,11 @@ const url = 'http://localhost:5000/purchases';
 const parseRepetitions = (repetition) => {
   let dates = [];
   if (repetition === "No") {
-    return [repetition];
+    return [];
   }
   let startIndex = 0;
   for (let i = 0; i < repetition.length; i++) {
-    if (repetition.substring(i, i + 1) === "/") {
+    if (repetition.substring(i, i + 1) === ",") {
       dates.push(repetition.substring(startIndex, i));
       startIndex = i + 1;
     }

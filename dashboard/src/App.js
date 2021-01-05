@@ -135,7 +135,7 @@ let name = "Chipotle";
 let price = 11;
 let category = "Food";
 let date = "2020-12-30";
-let repetition = "No";
+let repetition = "Mo/We";
 let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`};
 
 
