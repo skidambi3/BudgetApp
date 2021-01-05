@@ -10,7 +10,7 @@ import './Figma.css';
 import { requirePropFactory } from '@material-ui/core';
 import { user1, Purchase, Account } from './store.js';
 import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
-import { loadUser, updateUser, addPurchase } from './Backend.js'
+import { loadUser, updateUser, addPurchase, deletePurchase, updatePurchase } from './Backend.js'
 require('typeface-roboto');
 
 
@@ -223,8 +223,9 @@ function App() {
         <span id="e2_91">You’re currently projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
         <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
         </span>
-        <div id="add-purchase"> Add Purchase</div>
-        <div id="sign-out"> Sign Out</div>
+        <button id="add-purchase" onClick={() => updatePurchase(1, "Mo,Tu")}> Add Purchase</button>
+        <button id="sign-out" onClick={() => updateUser()}> Sign Out</button>
+        
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => alterBudget(account)}>Alter Budget</button>
 

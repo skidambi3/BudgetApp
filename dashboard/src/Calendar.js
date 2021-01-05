@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Calendar.css';
-import { user1 } from './store.js';
+import { user1, Purchase } from './store.js';
 import { startOfWeek, format, addDays, isEqual } from 'date-fns'
 import CalendarItem from './CalendarItem';
 import "./Figma.css"
