@@ -134,8 +134,8 @@ const parseRepetitions = (repetition) => {
 let name = "Chipotle";
 let price = 11;
 let category = "Food";
-let date = "2020-12-30";
-let repetition = "Mo/We";
+let date = "2022-12-30";
+let repetition = "Mo,We";
 let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`};
 
 
@@ -157,7 +157,6 @@ function App() {
   //create a copy, splice copy,set original visualization to copy
   //find computer ip address, disable firewall for that port (verify 3306 is right and open)
   const toggleVisualization = () => {
-    debugger;
 
     const firstElem = visualization[0]
     visualization.splice(0,1);
@@ -182,7 +181,6 @@ function App() {
 
   const handleChange = (newAccount) => {
     const accountCopy = Object.assign(Object.create(Object.getPrototypeOf(newAccount)), newAccount);
-    debugger;
     console.log(accountCopy);
     setAccount(accountCopy);
   }

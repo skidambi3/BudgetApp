@@ -68,6 +68,10 @@ const addPurchase = async (purchase,account,handleChange) => {
         console.log(error)
       })
 }
+const updatePurchase = async (itemId, repetition) => {
+  axios.put(`http://localhost:5000/purchases/update/${repetition}/${itemId}`)
+  console.log("Purchase updated")
+}
 
 const deletePurchase = async (itemId) => {
   axios.delete(
@@ -76,4 +80,4 @@ const deletePurchase = async (itemId) => {
   console.log("Purchase deleted.")
   }
 
-export { loadUser, updateUser, addPurchase, deletePurchase }
+export { loadUser, updateUser, addPurchase, deletePurchase,updatePurchase }
