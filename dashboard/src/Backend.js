@@ -23,33 +23,57 @@ const parseRepetitions = (repetition) => {
 }
 
 // gets data and loads into account onStart
-const loadUser = async () => {
+const loadUser = async (uuid, handleChange) => {
   const response = await fetch(
-    url
+    `http://localhost:5000/users/${uuid}`
   );
   const data = await response.json();
-  console.log("User loaded.")
   console.log(data);
-  getPurchases(data);
+
+  let account;
+  if (data.length == 0) {         // if account doesn't exist, add to users_db
+    console.log(`User ${uuid} created.`)
+    let newUser = {uuid: uuid, budget: 150}
+    addUser(newUser);
+    return new Account([], newUser.budget, uuid);    //set the acount accessible in App.js to this.
+  } else {                        // if account exists, load and display its data.
+    console.log(`User ${uuid} loaded.`)
+    account = new Account([], data.budget, uuid);
+    const response = await fetch(
+      `http://localhost:5000/purchases/${account.uuid}`
+    );
+    const purchases = await response.json();
+    getPurchases(purchases, account, handleChange);
+  }
+}
+
+const addUser = async (uuid) => {
+  axios.post(`http://localhost:5000/users`, uuid)
+    .then(response => {
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error)
+    })
 }
 
 // gets data, empties account, loads data into account
 const updateUser = async (account,handleChange) => {
   const response = await fetch(
-    url
+    `http://localhost:5000/purchases/${account.uuid}`
   );
   const data = await response.json();
-  console.log("User updated.")
+  console.log(`User ${account.uuid} updated.`)
   console.log(data);
   account.purchases = [];
-  getPurchases(data,account,handleChange);
+  getPurchases(data, account, handleChange);
 }
 
 const getPurchases = (data,account,handleChange) => {
   var item;
   for (let i = 0; i < data.length; i++) {
     item = data[i];
-    var purchase = new Purchase(item.id,item.name, item.price, item.category, parseJSON(item.date), parseRepetitions(item.repetition));
+    var purchase = new Purchase(item.id,item.name, item.price, item.category, parseJSON(item.date), parseRepetitions(item.repetition),account.uuid);
     account.purchases.push(purchase);
   }
   console.log(account);

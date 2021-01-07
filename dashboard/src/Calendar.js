@@ -66,7 +66,7 @@ class Calendar extends Component {
     handleRemove(purchase,date) {
       console.log(purchase)
       for (let i = 0; i < this.props.account.purchases.length; i++) {
-        if (objectsAreEqual(purchase,this.props.account.purchases[i])) {
+        if (purchase.id === this.props.account.purchases[i].id) {
           if (purchase.repetition.length > 1) {
             for (let j = 0; j < purchase.repetition.length; j++) {
               if (format(date,"EEEEEE")===purchase.repetition[j]) {
