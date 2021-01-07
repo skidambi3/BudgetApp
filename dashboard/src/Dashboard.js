@@ -135,7 +135,7 @@ let price = 11;
 let category = "Food";
 let date = "2022-12-30";
 let repetition = "Th";
-let uuid = 0;
+let uuid = "0";
 let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`, uuid: `${uuid}`};
 
 
