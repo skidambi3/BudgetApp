@@ -13,6 +13,7 @@ import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
 import { loadUser, updateUser, addPurchase } from './Backend.js'
 import {Route, Link} from "react-router-dom";
 import AddPurchase from "./AddPurchase.js";
+import firebase from './components/firebase.js'
 require('typeface-roboto');
 
 
@@ -153,10 +154,19 @@ function Dashboard(props) {
     setVisualization( Object.assign(megaClone));
 
   }
+  const [quote, setQuote] = useState('')
+
   useEffect(() => {
     console.log("first load");
+    debugger;
     updateUser(props.account,props.handleChange);
-  }, []);
+		if(firebase.getCurrentUsername()) {
+      firebase.getCurrentUserQuote().then(setQuote)
+      loadUser(firebase.getUserID(),props.handleChange)
+		}
+
+
+	  }, [firebase.getCurrentUsername(), firebase.getCurrentUserQuote()])
   return (
 
     <div>

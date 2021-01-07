@@ -54,6 +54,11 @@ class Firebase {
 		return this.auth.currentUser && this.auth.currentUser.displayName
 	}
 
+	getUserID() {
+		return this.auth.currentUser && this.auth.currentUser.uid
+	}
+
+
 	async getCurrentUserQuote() {
 		const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).get()
 		return quote.get('quote')

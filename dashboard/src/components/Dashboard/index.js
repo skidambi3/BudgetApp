@@ -4,7 +4,7 @@ import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
 import firebase from '../firebase'
 import { withRouter } from 'react-router-dom'
-require('firebase/auth')
+
 
 const styles = theme => ({
 	main: {
@@ -42,8 +42,9 @@ function Dashboard1(props) {
 	useEffect(() => {
 		if(firebase.getCurrentUsername()) {
 		  firebase.getCurrentUserQuote().then(setQuote)
-        }
-        console.log(firebase.auth().currentUser.uid);
+		}
+		debugger;
+        console.log(firebase.getUserID());
 
 	  }, [firebase.getCurrentUsername(), firebase.getCurrentUserQuote()])
 
