@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './Dashboard.css';
-import React, { useState, Component } from 'react';
+import React, { useState, Component,useEffect } from 'react';
 import { DayPilot, DayPilotCalendar } from "daypilot-pro-react";
 import ProgressBar from './ProgressBar.js';
 import Calendar from './Calendar.js';
@@ -10,7 +10,10 @@ import './Figma.css';
 import { requirePropFactory } from '@material-ui/core';
 import { user1, Purchase, Account } from './store.js';
 import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
-import { loadUser, updateUser, addPurchase, deletePurchase, updatePurchase } from './Backend.js'
+import { loadUser, updateUser, addPurchase } from './Backend.js'
+import {Route, Link} from "react-router-dom";
+import AddPurchase from "./AddPurchase.js";
+import firebase from './components/firebase.js'
 require('typeface-roboto');
 
 
@@ -110,22 +113,6 @@ const statusMessage = (account, budget, categoryPrices, startOfWeek) => {
   }
 }
 
-const parseRepetitions = (repetition) => {
-  let dates = [];
-  if (repetition === "No") {
-    return repetition;
-  }
-  let startIndex = 0;
-  for (let i = 0; i < repetition.length; i++) {
-    if (repetition.substring(i, i + 1) === "/") {
-      dates.push(repetition.substring(startIndex, i));
-      startIndex = i + 1;
-    }
-  }
-  dates.push(repetition.substring(repetition.length - 1, repetition.length));
-  return dates;
-}
-
 
 
 
@@ -139,8 +126,7 @@ let uuid = "0";
 let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category}`, date: `${date}`, repetition: `${repetition}`, uuid: `${uuid}`};
 
 
-function Dashboard() {
-  const [account,setAccount] = useState(user1);
+function Dashboard(props) {
 
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
   const alterDate = (count) => {
@@ -149,10 +135,10 @@ function Dashboard() {
   }
 
   const visualizationDict = {
-    one: <LineChart dailyCosts={generateDailyCosts(account, firstDay)} />,
-    two: <BarChart dailyCosts={findPriceDistribution(account,firstDay)[0]} categoryLabels={findPriceDistribution(account,firstDay)[1]} />
+    one: <LineChart dailyCosts={generateDailyCosts(props.account, firstDay)} />,
+    two: <BarChart dailyCosts={findPriceDistribution(props.account,firstDay)[0]} categoryLabels={findPriceDistribution(props.account,firstDay)[1]} />
   }
-  const vals = findPriceDistribution(user1, firstDay);
+  const vals = findPriceDistribution(props.account, firstDay);
   const [visualization,setVisualization] = useState(["one","two"])
   //create a copy, splice copy,set original visualization to copy
   //find computer ip address, disable firewall for that port (verify 3306 is right and open)
@@ -167,26 +153,22 @@ function Dashboard() {
     setVisualization( Object.assign(megaClone));
 
   }
+  const [quote, setQuote] = useState('')
 
-  const alterBudget = (account) => {
-    if (document.getElementById("alter-budget-input") !== null) {
-      console.log(document.getElementById("alter-budget-input").value);
-      account.weeklyBudget = document.getElementById("alter-budget-input").value;
-      handleChange(account);
-    }
+  useEffect(() => {
+    console.log("first load");
+    debugger;
+    updateUser(props.account,props.handleChange);
+		if(firebase.getCurrentUsername()) {
+      firebase.getCurrentUserQuote().then(setQuote)
+      loadUser(firebase.getUserID(),props.handleChange)
+		}
 
-  }
 
-
-
-  const handleChange = (newAccount) => {
-    const accountCopy = Object.assign(Object.create(Object.getPrototypeOf(newAccount)), newAccount);
-    console.log(accountCopy);
-    setAccount(accountCopy);
-  }
+	  }, [firebase.getCurrentUsername(), firebase.getCurrentUserQuote()])
   return (
 
-    <div className="App">
+    <div>
 
       <div id="frame"><span id="dashboard-title">My Dashboard</span>
         <div id="next-box"></div>
@@ -194,34 +176,38 @@ function Dashboard() {
         <div id="previous-box"></div>
         <span onClick={() => alterDate(7)} id="next">Next</span>
 
-        <Calendar onChange ={handleChange} startDate={firstDay} account={account}/>
+        <Calendar onChange ={props.handleChange} startDate={firstDay} account={props.account}/>
         {/* TODO: grid layout from MDN guide for columns */}
 
 
         <div id="report-header-box"></div>
         <div id="visualization-header-box"></div>
-        <span id="report-header">Status Report: {statusMessage(account, account.weeklyBudget, vals, firstDay)[0]}</span>
+        <span id="report-header">Status Report: {statusMessage(props.account, props.account.weeklyBudget, vals, firstDay)[0]}</span>
         <span onClick={() => toggleVisualization()} id="visualization-header">Toggle Visualizations</span>
         <div id="report"></div>
         <div id="visualization">
           {visualizationDict[visualization[0]]}
         </div>
-        <ProgressBar percentage={(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)>99 ? 100 : (findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)} />
+        <ProgressBar percentage={(findPurchaseTotal(props.account, firstDay) / props.account.weeklyBudget * 100)>99 ? 100 : (findPurchaseTotal(props.account, firstDay) / props.account.weeklyBudget * 100)} />
 
 
 
-        <span id="e2_91">You’re projected to spend {Math.round(findPurchaseTotal(account, firstDay) / account.weeklyBudget * 100)}% of your weekly budget</span>
-        <span id="recommendation">Recommendation: {statusMessage(account, account.weeklyBudget, vals, firstDay)[1]}
+        <span id="e2_91">You’re projected to spend {Math.round(findPurchaseTotal(props.account, firstDay) / props.account.weeklyBudget * 100)}% of your weekly budget</span>
+        <span id="recommendation">Recommendation: {statusMessage(props.account, props.account.weeklyBudget, vals, firstDay)[1]}
         </span>
-        <span id="total-spending">Your current budget is ${account.weeklyBudget} and current total spending is ${findPurchaseTotal(account, firstDay)}</span>
+        <span id="total-spending">Your current budget is ${props.account.weeklyBudget} and current total spending is ${findPurchaseTotal(props.account, firstDay)}</span>
 
 
-        <div id="add-purchase" onClick={() => addPurchase(examplePurchase,account,handleChange)}>  Add Purchase</div>
-        <button id="sign-out" onClick={() => loadUser(0, handleChange)}> Sign Out</button>
-
+        <div id="add-purchase" onClick={(e) => {
+              e.preventDefault();
+              window.location.href='/purchase';
+              }}>  Add Purchase</div>
+        <div id="sign-out" onClick={(e) => {
+              e.preventDefault();
+              window.location.href='/LoginApp';
+              }}> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
-          <button id="alter-budget"   onClick={() => alterBudget(account)}>Alter Budget</button>
-
+          <button id="alter-budget"   onClick={() => props.alterBudget(props.account)}>Alter Budget</button>
 
 
       </div>

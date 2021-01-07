@@ -22,8 +22,7 @@ const parseRepetitions = (repetition) => {
   return dates;
 }
 
-
-// takes in uuid, gets data and loads into account onStart
+// gets data and loads into account onStart
 const loadUser = async (uuid, handleChange) => {
   const response = await fetch(
     `http://localhost:5000/users/${uuid}`
@@ -48,7 +47,6 @@ const loadUser = async (uuid, handleChange) => {
   }
 }
 
-
 const addUser = async (uuid) => {
   axios.post(`http://localhost:5000/users`, uuid)
     .then(response => {
@@ -59,7 +57,7 @@ const addUser = async (uuid) => {
     })
 }
 
-// gets data, corresponding to account, empties account, loads data into account
+// gets data, empties account, loads data into account
 const updateUser = async (account,handleChange) => {
   const response = await fetch(
     `http://localhost:5000/purchases/${account.uuid}`
@@ -71,12 +69,11 @@ const updateUser = async (account,handleChange) => {
   getPurchases(data, account, handleChange);
 }
 
-// adds purchases from data to account object to be displayed
 const getPurchases = (data,account,handleChange) => {
   var item;
   for (let i = 0; i < data.length; i++) {
     item = data[i];
-    var purchase = new Purchase(item.id,item.name, item.price, item.category, parseJSON(item.date), parseRepetitions(item.repetition), account.uuid);
+    var purchase = new Purchase(item.id,item.name, item.price, item.category, parseJSON(item.date), parseRepetitions(item.repetition),account.uuid);
     account.purchases.push(purchase);
   }
   console.log(account);
@@ -95,7 +92,6 @@ const addPurchase = async (purchase,account,handleChange) => {
         console.log(error)
       })
 }
-
 const updatePurchase = async (itemId, repetition) => {
   axios.put(`http://localhost:5000/purchases/update/${repetition}/${itemId}`)
   console.log("Purchase updated")

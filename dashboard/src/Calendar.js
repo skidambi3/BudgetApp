@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Calendar.css';
-import { user1, Purchase } from './store.js';
+import { user1 } from './store.js';
 import { startOfWeek, format, addDays, isEqual } from 'date-fns'
 import CalendarItem from './CalendarItem';
 import "./Figma.css";
@@ -66,8 +66,7 @@ class Calendar extends Component {
     handleRemove(purchase,date) {
       console.log(purchase)
       for (let i = 0; i < this.props.account.purchases.length; i++) {
-        debugger;
-        if (purchase.id == this.props.account.purchases[i].id) {
+        if (purchase.id === this.props.account.purchases[i].id) {
           if (purchase.repetition.length > 1) {
             for (let j = 0; j < purchase.repetition.length; j++) {
               if (format(date,"EEEEEE")===purchase.repetition[j]) {
@@ -81,7 +80,6 @@ class Calendar extends Component {
           else {
             deletePurchase(this.props.account.purchases[i].id);
             console.log(this.props.account);
-            console.log("deleted")
             this.props.account.purchases.splice(i,1);
           }
         }
