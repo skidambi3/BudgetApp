@@ -60,8 +60,8 @@ class AddPurchase extends Component {
         price: this.state.price,
         category: this.state.category,
         date: dayToDate(this.state.day),
-        repetition: this.state.repeat
-
+        repetition: this.state.repeat,
+        uuid: this.props.account.uuid
       }
       //change to a dictionary, not object
       console.log(newPurchase);

@@ -14,6 +14,7 @@ import { loadUser, updateUser, addPurchase } from './Backend.js'
 import {Route, Link} from "react-router-dom";
 import AddPurchase from "./AddPurchase.js";
 import firebase from './components/firebase.js'
+
 require('typeface-roboto');
 
 
@@ -214,6 +215,10 @@ function Dashboard(props) {
       </div>
     </div>
   );
+  async function logout() {
+		await firebase.logout()
+		props.history.replace('/LoginApp')
+	}
 }
 
 export default Dashboard;

@@ -73,6 +73,7 @@ const getPurchases = (data,account,handleChange) => {
   var item;
   for (let i = 0; i < data.length; i++) {
     item = data[i];
+    debugger;
     var purchase = new Purchase(item.id,item.name, item.price, item.category, parseJSON(item.date), parseRepetitions(item.repetition),account.uuid);
     account.purchases.push(purchase);
   }
