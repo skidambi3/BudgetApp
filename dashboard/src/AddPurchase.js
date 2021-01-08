@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import {addPurchase} from  "./Backend.js";
+import {addPurchase, loadUser} from  "./Backend.js";
 import "./AddPurchase.css";
 import {Purchase} from "./store.js";
 import { startOfWeek, format, addDays, getTime, parseJSON, parseISO } from 'date-fns';
+import firebase from './components/firebase.js'
+
 
 
 const formValid = ({ formErrors, ...rest }) => {
@@ -51,9 +53,18 @@ class AddPurchase extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log("Mounted");
+    console.log(this.props.account);
+    if(firebase.getCurrentUsername()) {
+      loadUser(firebase.getUserID(),this.props.handleChange)
+    
+		}
+  }
+
   handleSubmit = e => {
     e.preventDefault();
-
+    
     if (formValid(this.state)) {
       const newPurchase = {
         name: this.state.itemName,
@@ -63,6 +74,7 @@ class AddPurchase extends Component {
         repetition: this.state.repeat,
         uuid: this.props.account.uuid
       }
+      debugger;
       //change to a dictionary, not object
       console.log(newPurchase);
       newPurchase.date = processRepetitions(newPurchase);
@@ -74,13 +86,14 @@ class AddPurchase extends Component {
         Category: ${this.state.category}
         Date: ${this.state.day}
         repeat: ${this.state.repeat}
+        uuid: ${this.props.account.uuid}
       `);
     } else {
       console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
     }
   };
 
-  handleChange = e => {
+  handleChange1 = e => {
     e.preventDefault();
     const { name, value } = e.target;
     let formErrors = { ...this.state.formErrors };
@@ -104,7 +117,7 @@ class AddPurchase extends Component {
                 type="text"
                 name="itemName"
                 noValidate
-                onChange={this.handleChange}
+                onChange={this.handleChange1}
               />
 
             </div>
@@ -116,7 +129,7 @@ class AddPurchase extends Component {
                 type="text"
                 name="price"
                 noValidate
-                onChange={this.handleChange}
+                onChange={this.handleChange1}
               />
 
             </div>
@@ -125,7 +138,7 @@ class AddPurchase extends Component {
               <label htmlFor="day">Date Purchased</label>
               <select id="day" name="day"
               noValidate
-              onChange={this.handleChange}>
+              onChange={this.handleChange1}>
                 <option value="selectDate">Select Date </option>
                 <option value="Su">Sunday</option>
                 <option value="Mo">Monday</option>
@@ -142,7 +155,7 @@ class AddPurchase extends Component {
               <label htmlFor="category">Category</label>
               <select id="category" name="category"
               noValidate
-              onChange={this.handleChange}>
+              onChange={this.handleChange1}>
                 <option value="selectCategory">Select Category</option>
                 <option value="Groceries">Groceries</option>
                 <option value="Rent">Rent</option>
@@ -161,7 +174,7 @@ class AddPurchase extends Component {
                 type="text"
                 name="repeat"
                 noValidate
-                onChange={this.handleChange}
+                onChange={this.handleChange1}
               />
             </div>
 

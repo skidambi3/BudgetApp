@@ -24,6 +24,8 @@ const parseRepetitions = (repetition) => {
 
 // gets data and loads into account onStart
 const loadUser = async (uuid, handleChange) => {
+  console.log(`UUID in loadUser: ${uuid}`)
+  //let user = {uuid: `${uuid}`};
   const response = await fetch(
     `http://localhost:5000/users/${uuid}`
   );
