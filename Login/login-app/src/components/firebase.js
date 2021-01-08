@@ -39,7 +39,7 @@ class Firebase {
 			return alert('Not authorized')
 		}
 
-		return this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).set({
+		return this.db.doc(`users_codedamn_video/${this.auth.currentUser.uuid}`).set({
 			quote
 		})
 	}
@@ -55,7 +55,8 @@ class Firebase {
 	}
 
 	async getCurrentUserQuote() {
-		const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).get()
+		console.log("tested")
+		const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uuid}`).get()
 		return quote.get('quote')
 	}
 }

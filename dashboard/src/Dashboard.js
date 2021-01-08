@@ -55,7 +55,7 @@ const findPriceDistribution = (account, startOfWeek) => {
       }
     }
     else if (getTime(purchase.day) >= getTime(startOfWeek) && getTime(purchase.day) < getTime(addDays(startOfWeek, 7))){
-      console.log(purchase.name)
+      //console.log(purchase.name)
       if (purchase.category in prices) {
         prices[purchase.category] += purchase.price;
       }
@@ -155,10 +155,15 @@ function Dashboard(props) {
   }
   const [quote, setQuote] = useState('')
 
+  
+
   useEffect(() => {
     console.log("first load");
+    console.log(props.account);
     debugger;
-    updateUser(props.account,props.handleChange);
+    console.log(firebase.getUserID());
+    //loadUser('abcde', props.handleChange);
+    //updateUser(props.account,props.handleChange);
 		if(firebase.getCurrentUsername()) {
       firebase.getCurrentUserQuote().then(setQuote)
       loadUser(firebase.getUserID(),props.handleChange)
@@ -202,10 +207,7 @@ function Dashboard(props) {
               e.preventDefault();
               window.location.href='/purchase';
               }}>  Add Purchase</div>
-        <div id="sign-out" onClick={(e) => {
-              e.preventDefault();
-              window.location.href='/LoginApp';
-              }}> Sign Out</div>
+        <div id="sign-out" onClick={logout}> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => props.alterBudget(props.account)}>Alter Budget</button>
 
@@ -213,6 +215,14 @@ function Dashboard(props) {
       </div>
     </div>
   );
+
+
+  async function logout() {
+		await firebase.logout()
+		props.history.push('/LoginApp')
+  }
+  
+
 }
 
 export default Dashboard;

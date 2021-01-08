@@ -60,9 +60,9 @@ app.get('/purchases', (req, res) => {
 
 // get request: select all purchases with uuid
 app.get('/purchases/:uuid', (req, res) => {
-  const sql = `SELECT * FROM purchases_db WHERE uuid = ${req.params.uuid}`;
+  const sql = `SELECT * FROM purchases_db WHERE uuid = ?`;
   try {
-    connection.query(sql, (err, result) => {
+    connection.query(sql, req.params.uuid, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
@@ -131,9 +131,12 @@ app.get('/users', (req, res) => {
 
 // get request: select all users with uuid
 app.get('/users/:uuid', (req, res) => {
-  const sql = `SELECT * FROM users_db WHERE uuid = ${req.params.uuid}`;
+    //console.log(req);
+    console.log(req.params);
+    console.log("req.params.uuid: " + req.params.uuid);
+  const sql = `SELECT * FROM users_db WHERE uuid = ?`;
   try {
-    connection.query(sql, (err, result) => {
+    connection.query(sql, req.params.uuid, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
