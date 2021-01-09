@@ -2,7 +2,7 @@ import React, { useState, Component } from 'react';
 import AddPurchase from "./AddPurchase.js";
 import Dashboard from "./Dashboard.js";
 import { user1, Purchase, Account } from './store.js';
-import { Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
 import { loadUser, updateUser, addPurchase } from './Backend.js'
 import {LineChart,BarChart} from './Chart.js';
@@ -33,13 +33,14 @@ function App() {
     }
     return (
         <div className="App">
-            <Route exact path="/" render={(props) => <Dashboard account={account} handleChange={handleChange} alterBudget={alterBudget} />} />
-            <Route exact path="/LoginApp" render={(props) => <HomePage/>} />
-            <Route exact path="/login" render={(props) => <Login/>} />
-            <Route exact path="/register" render={(props) => <Register/>} />
-            <Route exact path="/purchase" render={(props) => <AddPurchase account={account} handleChange={handleChange}/>} />
-            <Route exact path="/dashboard" render={(props) => <Dashboard1/>} />
-
+            <Router>
+                <Route exact path="/" render={(props) => <Dashboard account={account} handleChange={handleChange} alterBudget={alterBudget} />} />
+                <Route exact path="/LoginApp" render={(props) => <HomePage/>} />
+                <Route exact path="/login" render={(props) => <Login/>} />
+                <Route exact path="/register" render={(props) => <Register/>} />
+                <Route exact path="/purchase" render={(props) => <AddPurchase account={account} handleChange={handleChange}/>} />
+                <Route exact path="/dashboard" render={(props) => <Dashboard1/>} />
+            </Router>
         </div>
     )
 }

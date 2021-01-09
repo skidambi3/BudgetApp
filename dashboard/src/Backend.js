@@ -22,10 +22,9 @@ const parseRepetitions = (repetition) => {
   return dates;
 }
 
-// gets data and loads into account onStart
+// GET data and loads into account onStart
 const loadUser = async (uuid, handleChange) => {
   console.log(`UUID in loadUser: ${uuid}`)
-  //let user = {uuid: `${uuid}`};
   const response = await fetch(
     `http://localhost:5000/users/${uuid}`
   );
@@ -59,7 +58,7 @@ const addUser = async (uuid) => {
     })
 }
 
-// gets data, empties account, loads data into account
+// GET data, empties account, loads data into account
 const updateUser = async (account,handleChange) => {
   const response = await fetch(
     `http://localhost:5000/purchases/${account.uuid}`
@@ -94,6 +93,7 @@ const addPurchase = async (purchase,account,handleChange) => {
         console.log(error)
       })
 }
+
 const updatePurchase = async (itemId, repetition) => {
   axios.put(`http://localhost:5000/purchases/update/${repetition}/${itemId}`)
   console.log("Purchase updated")

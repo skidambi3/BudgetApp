@@ -207,6 +207,7 @@ function Dashboard(props) {
               e.preventDefault();
               window.location.href='/purchase';
               }}>  Add Purchase</div>
+
         <div id="sign-out" onClick={logout}> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => props.alterBudget(props.account)}>Alter Budget</button>
@@ -219,7 +220,7 @@ function Dashboard(props) {
 
   async function logout() {
 		await firebase.logout()
-		props.history.push('/LoginApp')
+		props.replace.push('/LoginApp')
   }
   
 
