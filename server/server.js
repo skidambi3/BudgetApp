@@ -38,13 +38,12 @@ function handleDisconnect() {
   });
 }
 
+
+
+/** PURCHASE METHODS */
+// get request: get all purchases
 app.get('/purchases', (req, res) => {
   console.log(connection);
-
-  //res.send("Hello World");
-  // if (connection.State != ConnectionState.Open) {
-  //     connection.Open()
-  // }
   const sql = 'SELECT * FROM purchases_db';
   try {
     connection.query(sql, (err, result) => {
@@ -111,10 +110,7 @@ app.delete('/purchases/delete/:id', (req, res) => {
   });
 });
 
-
-
-
-
+/** USER METHODS */
 // get request: select all users
 app.get('/users', (req, res) => {
   const sql = 'SELECT * FROM users_db';
