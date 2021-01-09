@@ -70,7 +70,7 @@ function HomePage(props) {
 					variant="contained"
 					color="secondary"
 					component={Link}
-					to="/"
+					to="/dashboard"
 					className={classes.submit}>
 					Dashboard
           		</Button>

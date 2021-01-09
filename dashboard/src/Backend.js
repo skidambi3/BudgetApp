@@ -46,6 +46,7 @@ const loadUser = async (uuid, handleChange) => {
     );
     const purchases = await response.json();
     getPurchases(purchases, account, handleChange);
+    console.log(account);
   }
 }
 

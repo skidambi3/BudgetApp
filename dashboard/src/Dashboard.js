@@ -11,11 +11,10 @@ import { requirePropFactory } from '@material-ui/core';
 import { user1, Purchase, Account } from './store.js';
 import { startOfWeek, format, addDays, getTime, parseJSON } from 'date-fns'
 import { loadUser, updateUser, addPurchase } from './Backend.js'
-import {Route, Link} from "react-router-dom";
+import {Route, Link, useHistory} from "react-router-dom";
 import AddPurchase from "./AddPurchase.js";
 import firebase from './components/firebase.js'
-
-require('typeface-roboto');
+import { withRouter } from "react-router";
 
 
 //going to previous and next = add/subtract 7 days
@@ -129,6 +128,8 @@ let examplePurchase = {name: `${name}`, price: `${price}`, category: `${category
 
 function Dashboard(props) {
 
+  let history = useHistory();
+
   const [firstDay, setDate] = useState(startOfWeek(new Date()));
   const alterDate = (count) => {
     setDate(addDays(firstDay, count));
@@ -156,7 +157,12 @@ function Dashboard(props) {
   }
   const [quote, setQuote] = useState('')
 
-
+  const handleClickPurchase = () => {
+    history.push({
+      pathname:"/purchase",
+      state: props.account
+    });
+  }
 
   useEffect(() => {
     console.log("first load");
@@ -171,7 +177,7 @@ function Dashboard(props) {
 		}
 
 
-	  }, [firebase.getCurrentUsername(), firebase.getCurrentUserQuote()])
+	  }, [])
   return (
 
     <div>
@@ -204,10 +210,7 @@ function Dashboard(props) {
         <span id="total-spending">Your current budget is ${props.account.weeklyBudget} and current total spending is ${findPurchaseTotal(props.account, firstDay)}</span>
 
 
-        <div id="add-purchase" onClick={(e) => {
-              e.preventDefault();
-              window.location.href='/purchase';
-              }}>  Add Purchase</div>
+        <div id="add-purchase" onClick={() => handleClickPurchase()}>  Add Purchase</div>
         <div id="sign-out" onClick={logout}> Sign Out</div>
         <input id ="alter-budget-input" type="text" name="budget" />
           <button id="alter-budget"   onClick={() => props.alterBudget(props.account)}>Alter Budget</button>
@@ -218,8 +221,8 @@ function Dashboard(props) {
   );
   async function logout() {
 		await firebase.logout()
-		props.history.replace('/LoginApp')
+		props.history.replace('/')
 	}
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);

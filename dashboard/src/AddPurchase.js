@@ -38,6 +38,7 @@ class AddPurchase extends Component {
     super(props);
 
     this.state = {
+      account: null,
       itemName: null,
       price: null,
       category: null,
@@ -55,16 +56,13 @@ class AddPurchase extends Component {
 
   componentDidMount() {
     console.log("Mounted");
-    console.log(this.props.account);
-    if(firebase.getCurrentUsername()) {
-      loadUser(firebase.getUserID(),this.props.handleChange)
-    
-		}
+    console.log(this.props)
+
   }
 
   handleSubmit = e => {
     e.preventDefault();
-    
+
     if (formValid(this.state)) {
       const newPurchase = {
         name: this.state.itemName,
@@ -182,7 +180,7 @@ class AddPurchase extends Component {
               <button type="submit"  >Add Purchase</button>
               <button onClick={(e) => {
               e.preventDefault();
-              window.location.href='/';
+              window.location.href='/dashboard';
               }}>Exit Page</button>
             </div>
           </form>
