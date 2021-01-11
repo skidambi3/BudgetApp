@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // create connection
-const connection = mysql.createConnection('mysql://beff28cd12f519:e3a36fc4@us-cdbr-east-02.cleardb.com/heroku_7ee16bba47948d7?reconnect=true');
+let connection = mysql.createConnection('mysql://beff28cd12f519:e3a36fc4@us-cdbr-east-02.cleardb.com/heroku_7ee16bba47948d7?reconnect=true');
 
 // get request: select all purchases
 
@@ -130,6 +130,7 @@ app.get('/users/:uuid', (req, res) => {
     //console.log(req);
     console.log(req.params);
     console.log("req.params.uuid: " + req.params.uuid);
+    handleDisconnect();
   const sql = `SELECT * FROM users_db WHERE uuid = ?`;
   try {
     connection.query(sql, req.params.uuid, (err, result) => {
@@ -139,6 +140,7 @@ app.get('/users/:uuid', (req, res) => {
   }
   catch (error) {
     console.log(error);
+    handleDisconnect();
   }
 })
 
@@ -146,13 +148,20 @@ app.get('/users/:uuid', (req, res) => {
 // post request: add a user
 app.post('/users', (req, res) => {
   console.log(req.body);
-
+  handleDisconnect();
   let sql = "INSERT INTO users_db SET ?";
-  let query = connection.query(sql, [req.body], (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    res.send('user added');
-  });
+  try {
+    let query = connection.query(sql, [req.body], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      res.send('user added');
+    });
+  }
+  catch (error) {
+    console.log(error);
+    handleDisconnect();
+  }
+
 });
 
 const PORT = process.env.PORT || 5000;

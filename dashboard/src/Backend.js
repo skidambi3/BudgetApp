@@ -39,7 +39,9 @@ const loadUser = async (uuid, handleChange) => {
     return new Account([], newUser.budget, uuid);    //set the acount accessible in App.js to this.
   } else {                        // if account exists, load and display its data.
     console.log(`User ${uuid} loaded.`)
-    account = new Account([], data.budget, uuid);
+    debugger;
+    account = new Account([], data[0].budget, uuid);
+
     const response = await fetch(
       `http://localhost:5000/purchases/${account.uuid}`
     );

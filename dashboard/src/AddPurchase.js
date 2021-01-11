@@ -73,6 +73,7 @@ class AddPurchase extends Component {
         uuid: this.props.account.uuid
       }
       debugger;
+      
       //change to a dictionary, not object
       console.log(newPurchase);
       newPurchase.date = processRepetitions(newPurchase);
